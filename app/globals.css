@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@theme {
+  --color-raya-cream: #fffaf0;
+  --color-raya-ink: #073042;
+  --color-raya-muted: #314e58;
+  --color-raya-line: #cce8e5;
+  --color-raya-gold: #ffb703;
+  --color-raya-wine: #ff4d6d;
+  --color-raya-forest: #00875a;
+  --color-raya-navy: #004e64;
+  --color-raya-sky: #00a8cc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  background: #fffaf0;
+  color: #073042;
+  font-family: Inter, sans-serif;
+  font-feature-settings: "liga" 1, "calt" 1;
+  font-optical-sizing: auto;
+  font-weight: 540;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+p,
+li {
+  font-weight: 580;
+}
+
+a,
+button,
+label,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-weight: 680;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 860;
+  letter-spacing: 0;
+}
+
+.font-semibold {
+  font-weight: 760;
+}
+
+.font-bold {
+  font-weight: 820;
+}
+
+.font-extrabold {
+  font-weight: 860;
+}
+
+.font-black {
+  font-weight: 900;
+}
+
+.text-raya-muted {
+  color: #314e58;
+}
+
+img {
+  display: block;
+}
+
+@keyframes soft-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes seal-shine {
+  0%,
+  100% {
+    transform: translateX(-65%) rotate(12deg);
+  }
+  42% {
+    transform: translateX(65%) rotate(12deg);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+
+@keyframes ken-burns {
+  from {
+    transform: scale(1.06) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
