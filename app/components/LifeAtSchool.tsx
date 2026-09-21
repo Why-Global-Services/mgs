@@ -1,55 +1,68 @@
-import { lifeCards } from "./data";
+import { zipAsset } from "./data";
 
 export function LifeAtSchool() {
+  const cards = [
+    {
+      title: "Library & Reading Culture",
+      image: zipAsset("reading"),
+    },
+    {
+      title: "Practical Learning",
+      image: zipAsset("stem-learning"),
+    },
+    {
+      title: "Sports Activities",
+      image: zipAsset("champion"),
+    },
+  ];
+
   return (
-    <section className="relative overflow-hidden bg-[radial-gradient(circle_at_10%_20%,rgba(255,183,3,0.2),transparent_28%),linear-gradient(180deg,#fffaf0_0%,#e6fbf7_50%,#f6fbff_100%)] px-5 py-14 sm:px-8 md:px-10 md:py-20 lg:px-10">
-      <div className="absolute right-[-120px] top-[-90px] h-80 w-80 rounded-full bg-raya-sky/15 blur-3xl" />
-      <div className="absolute bottom-[-120px] left-[-120px] h-80 w-80 rounded-full bg-raya-gold/18 blur-3xl" />
-      <div className="relative mx-auto w-full max-w-[1280px]">
-        <div className="mb-10 grid gap-5 md:mb-14 md:grid-cols-[0.78fr_1fr] md:items-end">
-          <div>
-            <p className="text-[13px] font-black uppercase text-raya-gold">
-              Learning advantage
-            </p>
-            <h2 className="mt-3 text-[clamp(2rem,5vw,3.5rem)] font-black leading-[1.1] text-raya-navy">
-              Why Choose IB & Cambridge?
+    <section className="bg-white py-16 lg:py-24" id="life-at-mgs">
+      <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12">
+        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[1fr_2.4fr] lg:gap-14">
+          {/* Left Column: Heading, intro, and CTA */}
+          <div className="max-w-[360px]">
+            <h2 className="font-serif text-[34px] font-bold text-[#073042] sm:text-[40px] lg:text-[44px]">
+              Life at MGS
             </h2>
+            <div className="my-4 h-[2px] w-12 bg-[#c48f3b]" />
+            <p className="text-[15px] leading-[1.7] text-raya-muted sm:text-[16px]">
+              A vibrant campus life with endless opportunities to explore, create, and grow.
+              From student-led clubs to cultural and athletic showcases, life at MGS is an enriching journey.
+            </p>
+            <div className="mt-7">
+              <a
+                href="/events-and-gallery"
+                className="inline-flex items-center gap-2 rounded-sm border border-[#c48f3b] px-6 py-2.5 text-[12px] font-bold uppercase tracking-wider text-[#073042] transition-colors hover:bg-[#c48f3b] hover:text-white"
+              >
+                <span>Events &amp; Gallery</span>
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
           </div>
-          <p className="max-w-[520px] text-[17px] leading-[1.65] text-raya-muted md:justify-self-end md:text-[19px]">
-            A bright international school experience with inquiry, creativity,
-            innovation, wellbeing, and real-world confidence at the centre.
-          </p>
-        </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {lifeCards.map((card) => (
-            <article
-              className="group overflow-hidden rounded-[26px] bg-white shadow-[0_24px_64px_rgba(0,78,100,0.13)] ring-1 ring-raya-sky/15 transition hover:-translate-y-1 hover:shadow-[0_34px_78px_rgba(0,168,204,0.2)]"
-              key={card.title}
-            >
-              <div className="relative aspect-[1.1] overflow-hidden bg-raya-line">
-                <img
-                  alt={card.title}
-                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                  loading="lazy"
-                  src={card.image}
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,48,66,0.04)_0%,rgba(7,48,66,0.58)_100%)]" />
-                <span className="absolute bottom-4 left-4 rounded-full bg-raya-gold px-3 py-1.5 text-[11px] font-black uppercase text-raya-ink">
-                  MGS
-                </span>
-              </div>
-              <div className="p-5">
-                <h3 className="text-[22px] font-black leading-tight text-raya-forest">
+
+          {/* Right Column: 3 Editorial Photo Cards */}
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+            {cards.map((card, index) => (
+              <div key={index} className="group flex flex-col">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-raya-line shadow-md">
+                  <img
+                    src={card.image}
+                    alt={card.title}
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
+                </div>
+                <h3 className="mt-3.5 text-center font-serif text-[16px] font-bold text-[#073042] transition duration-300 group-hover:text-raya-forest sm:text-[17px]">
                   {card.title}
                 </h3>
-                <p className="mt-4 text-[16px] leading-[1.6] text-raya-muted">
-                  {card.body}
-                </p>
               </div>
-            </article>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
+

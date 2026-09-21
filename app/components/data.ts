@@ -35,6 +35,10 @@ export const menuSections = [
 
 export const heroSlides = [
   {
+    src: "/assets/hero-students-campus.jpg",
+    imageClass: "object-cover object-top",
+  },
+  {
     src: zipAsset("main-image"),
     imageClass: "object-cover object-center",
   },
@@ -51,6 +55,7 @@ export const heroSlides = [
     imageClass: "object-cover object-center",
   },
 ];
+
 
 export const programs = [
   {
@@ -69,15 +74,8 @@ export const programs = [
       "Students build strong academic foundations, critical thinking, research skills, communication, and readiness for universities worldwide.",
     ],
   },
-  {
-    title: "Primary Years Programme (PYP)",
-    image: zipAsset("story-nook-2"),
-    body: [
-      "At MGS, the PYP transdisciplinary framework emphasizes holistic development of each student as an inquirer within and beyond the classroom.",
-      "Students engage in thinking, planning, creating, reflecting, and applying conceptual understanding through project-based learning.",
-    ],
-  },
 ];
+
 
 export const lifeCards = [
   {

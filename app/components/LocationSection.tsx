@@ -1,3 +1,5 @@
+import { schoolContact } from "../content/contact";
+
 export function LocationSection() {
   return (
     <section className="px-6 py-16 md:px-10 md:py-24" id="contact">
@@ -12,29 +14,40 @@ export function LocationSection() {
             international mindedness, respect for diverse cultures, and strong
             parent-school partnerships.
           </p>
-          <p className="mt-8 text-[17px] leading-[1.65] text-raya-muted md:text-[20px]">
-            Campus visit and schedule-a-call options are available through the
-            admissions inquiry form.
-            <span className="block">Admin can download admission data from the Excel link.</span>
-          </p>
+          {/* School address */}
+          <address className="mt-8 not-italic text-[17px] leading-[1.8] text-raya-muted md:text-[19px]">
+            <span className="block font-bold text-raya-ink">
+              {schoolContact.name}
+            </span>
+            {schoolContact.addressLines.map((line) => (
+              <span className="block" key={line}>
+                {line}
+              </span>
+            ))}
+          </address>
+          <a
+            className="mt-6 inline-block font-semibold text-raya-forest underline-offset-2 transition hover:underline"
+            href={schoolContact.googleMapsUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            View on Google Maps →
+          </a>
         </div>
-        <a
-          aria-label="googleMap"
-          className="relative block aspect-square overflow-hidden bg-raya-line"
-          href="https://www.google.com/maps/place/The+School+of+Raya/"
-        >
-          <img
-            alt="Map Mobile"
-            className="h-full w-full object-cover"
-            src="/assets/optimized/location-map.jpg"
+
+        {/* Live Google Maps embed */}
+        <div className="relative overflow-hidden rounded-2xl shadow-[0_20px_48px_rgba(0,78,100,0.14)]">
+          <iframe
+            allowFullScreen
+            className="aspect-square w-full"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            src={schoolContact.googleMapsEmbed}
+            title="Maharishi Global School Location Map"
           />
-          <img
-            alt="Map Pin"
-            className="absolute left-1/2 top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2"
-            src="/assets/optimized/map-pin.webp"
-          />
-        </a>
+        </div>
       </div>
     </section>
   );
 }
+
