@@ -3,33 +3,219 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { navigation, type NavigationPage } from "../content/navigation";
-
-const isCurrent = (page: NavigationPage, pathname: string) => pathname === page.path || page.legacyPaths?.includes(pathname);
-
-function Chevron({ open = false }: { open?: boolean }) {
-  return <svg aria-hidden="true" className={`h-4 w-4 shrink-0 transition-transform ${open ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" /></svg>;
-}
+import { useGSAPScope, gsap } from "../lib/motion";
+import { homepageImages } from "../lib/images";
 
 function Brand() {
-  return <a aria-label="Maharishi Global School home" className="flex min-w-0 items-center gap-3" href="/"><img alt="Maharishi Global School" className="h-[50px] w-[50px] shrink-0 object-contain sm:h-[58px] sm:w-[58px] xl:h-[64px] xl:w-[64px]" src="/assets/optimized/maharishi-logo-transparent.png" /><span className="min-w-0"><span className="block text-[13px] font-black leading-[1.05] text-raya-navy sm:text-[16px] xl:text-[17px]">Maharishi Global School</span><span className="block text-[10px] font-black text-raya-navy sm:text-[14px] xl:text-[15px]">@ PMR Campus</span><span className="mt-0.5 hidden text-[10px] font-extrabold uppercase text-raya-forest sm:block">IB &amp; Cambridge Launch</span></span></a>;
+  return (
+    <a
+      aria-label="Maharishi Global School home"
+      className="group flex min-w-0 items-center gap-3 transition-opacity hover:opacity-95"
+      href="/"
+    >
+      <img
+        alt="Maharishi Global School Logo"
+        className="nav-logo h-[52px] w-[52px] shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 sm:h-[60px] sm:w-[60px]"
+        src={homepageImages.logo.src}
+      />
+      <div className="flex flex-col justify-center">
+        <span className="font-serif text-[15px] font-extrabold uppercase leading-none tracking-wider text-[#072338] sm:text-[18px]">
+          Maharishi
+        </span>
+        <span className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#072338] sm:text-[13px]">
+          Global School
+        </span>
+        <div className="mt-1">
+          <span className="nav-badge inline-block rounded-full bg-[#c59139] px-2.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-white shadow-xs sm:text-[10px]">
+            @ PMR Campus
+          </span>
+        </div>
+      </div>
+    </a>
+  );
 }
-
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open]);
-  const close = () => { setOpen(false); setExpanded(null); };
-  const active = (item: typeof navigation[number]) => isCurrent(item, pathname) || item.children?.some((child) => isCurrent(child, pathname));
 
-  return <>
-    <header className="fixed inset-x-0 top-0 z-50 text-raya-navy shadow-[0_16px_46px_rgba(0,78,100,0.12)]">
-      <div className="border-b border-white/10 bg-raya-navy text-white"><div className="mx-auto flex h-8 max-w-[1440px] items-center justify-end px-5 sm:h-9 sm:px-8 xl:px-10"><div className="flex divide-x divide-white/30 text-[10px] font-extrabold uppercase tracking-[0.04em] sm:text-[11px]"><a className="px-2 hover:text-raya-gold sm:px-3" href="tel:+910000000000">Call Admissions</a><a className="px-2 hover:text-raya-gold sm:px-3" href="mailto:admin@maharishiglobalschool.com">Email Us</a></div></div></div>
-      <nav className="border-b border-raya-line bg-white/96 backdrop-blur-xl"><div className="mx-auto flex h-[82px] max-w-[1440px] items-stretch px-5 sm:h-[94px] sm:px-8 xl:h-[108px] xl:px-10"><div className="flex min-w-0 flex-1 items-center xl:max-w-[300px] xl:flex-none xl:border-r xl:border-raya-line xl:pr-5"><Brand /></div>
-        <div className="hidden min-w-0 flex-1 items-stretch xl:flex" aria-label="Primary navigation">{navigation.map((item) => <div className="group relative flex min-w-0 flex-1" key={item.path}>{item.children ? <button aria-expanded="false" className={`flex min-w-0 flex-1 items-center justify-center gap-1 border-r border-raya-line px-1 text-center text-[11px] font-extrabold leading-[1.15] transition hover:bg-raya-sky/10 hover:text-raya-sky ${active(item) ? "bg-raya-sky/10 text-raya-sky" : "text-raya-navy"}`} type="button"><span>{item.title}</span><Chevron /></button> : <a className={`flex min-w-0 flex-1 items-center justify-center border-r border-raya-line px-1 text-center text-[11px] font-extrabold leading-[1.15] transition hover:bg-raya-sky/10 hover:text-raya-sky ${active(item) ? "bg-raya-sky/10 text-raya-sky" : "text-raya-navy"}`} href={item.path}>{item.title}</a>}{item.children ? <div className="invisible absolute left-1/2 top-full z-50 w-72 max-w-[calc(100vw-2.5rem)] -translate-x-1/2 translate-y-2 rounded-b-2xl border border-raya-line bg-white p-2 opacity-0 shadow-[0_20px_46px_rgba(0,78,100,0.18)] transition duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 first:left-0 first:translate-x-0 last:left-auto last:right-0 last:translate-x-0"><ul>{item.children.map((child) => <li key={child.path}><a className={`block rounded-xl px-4 py-3 text-[13px] font-bold leading-snug transition hover:bg-raya-sky/10 hover:text-raya-sky ${isCurrent(child, pathname) ? "bg-raya-sky/10 text-raya-sky" : "text-raya-muted"}`} href={child.path}>{child.title}</a></li>)}</ul></div> : null}</div>)}</div>
-        <div className="flex shrink-0 items-center gap-2 pl-2 sm:gap-3 sm:pl-4 xl:pl-3"><a className="hidden min-h-10 items-center justify-center rounded-full bg-raya-gold px-4 text-[11px] font-black uppercase text-raya-ink transition hover:bg-raya-wine hover:text-white sm:inline-flex" href="/admissions/apply-now">Apply Now</a><button aria-expanded={open} aria-label={open ? "Close menu" : "Open menu"} className="flex h-10 w-11 shrink-0 flex-col items-center justify-center gap-1.5 rounded-full transition hover:bg-raya-sky/10 sm:h-11 sm:w-12 xl:hidden" onClick={() => setOpen((value) => !value)} type="button"><span className={`block h-0.5 w-7 bg-raya-navy transition ${open ? "translate-y-[8px] rotate-45" : ""}`} /><span className={`block h-0.5 w-7 bg-raya-navy transition ${open ? "opacity-0" : ""}`} /><span className={`block h-0.5 w-7 bg-raya-navy transition ${open ? "-translate-y-[8px] -rotate-45" : ""}`} /></button></div></div></nav>
-    </header>
-    <div aria-hidden={!open} className={`fixed inset-0 z-40 h-screen overflow-y-auto bg-[radial-gradient(circle_at_78%_12%,rgba(255,183,3,0.26),transparent_28%),linear-gradient(135deg,#fffaf0_0%,#dff7f3_45%,#e7f7ff_100%)] px-5 pb-12 pt-[128px] transition-all duration-300 sm:px-8 sm:pt-[150px] ${open ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-4 opacity-0"}`}><div className="mx-auto w-full max-w-3xl"><div className="flex items-center justify-between border-b border-raya-sky/35 pb-4"><p className="text-[13px] font-black uppercase tracking-wider text-raya-forest">Menu</p><button className="min-h-11 rounded-full px-4 text-sm font-black text-raya-navy hover:bg-raya-sky/10" onClick={close} type="button">Close</button></div><ul className="mt-3">{navigation.map((item) => { const isExpanded = expanded === item.path; return <li className="border-b border-raya-line" key={item.path}>{item.children ? <><button aria-expanded={isExpanded} className={`flex min-h-14 w-full items-center justify-between gap-4 py-3 text-left text-[17px] font-black ${active(item) ? "text-raya-sky" : "text-raya-navy"}`} onClick={() => setExpanded(isExpanded ? null : item.path)} type="button"><span>{item.title}</span><Chevron open={isExpanded} /></button><div className={`grid overflow-hidden transition-[grid-template-rows] duration-300 ${isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}><ul className="min-h-0 pb-3 pl-4">{item.children.map((child) => <li key={child.path}><a className={`flex min-h-11 items-center rounded-xl px-3 py-2 text-[15px] font-bold leading-snug hover:bg-raya-sky/10 ${isCurrent(child, pathname) ? "bg-raya-sky/10 text-raya-sky" : "text-raya-muted"}`} href={child.path} onClick={close}>{child.title}</a></li>)}</ul></div></> : <a className={`flex min-h-14 items-center py-3 text-[17px] font-black ${active(item) ? "text-raya-sky" : "text-raya-navy"}`} href={item.path} onClick={close}>{item.title}</a>}</li>; })}</ul></div></div>
-  </>;
+  const headerRef = useGSAPScope<HTMLElement>((ctx, isReduced) => {
+    if (isReduced) return;
+
+    const tl = ctx.selector
+      ? (window as any).gsap?.timeline?.()
+      : null;
+
+    // Use gsap from window or imported
+    const gsap = (window as any).gsap;
+    if (!gsap) return;
+
+    const navTl = gsap.timeline({ defaults: { ease: "power2.out" } });
+
+    navTl.fromTo(
+      ".nav-logo",
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 0.7 }
+    );
+
+    navTl.fromTo(
+      ".nav-badge",
+      { opacity: 0 },
+      { opacity: 1, duration: 0.5 },
+      "-=0.4"
+    );
+
+    navTl.fromTo(
+      ".nav-link-item",
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.5, stagger: 0.08 },
+      "-=0.3"
+    );
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const close = () => {
+    setOpen(false);
+    setExpanded(null);
+  };
+
+  const navLinks = [
+    { label: "About us", href: "/about-us/vision-mission", match: "/about-us" },
+    { label: "Programmes", href: "/#programmes", match: "programmes" },
+    { label: "Admissions", href: "/#admissions", match: "admissions" },
+    { label: "Events & Gallery", href: "/#life-at-mgs", match: "events" },
+    { label: "Contact", href: "/#contact", match: "contact" },
+  ];
+
+  return (
+    <>
+      <header
+        ref={headerRef}
+        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+          scrolled
+            ? "bg-white/95 shadow-[0_4px_24px_rgba(7,35,56,0.08)] backdrop-blur-md"
+            : "bg-white border-b border-gray-100"
+        }`}
+      >
+        <div className="mx-auto flex h-[82px] max-w-[1400px] items-center justify-between px-5 sm:h-[92px] sm:px-8 lg:px-12">
+          {/* Logo & PMR Campus gold strip */}
+          <Brand />
+
+          {/* Desktop Navigation matching the reference screenshot */}
+          <nav
+            aria-label="Primary navigation"
+            className="hidden items-center gap-7 lg:flex xl:gap-9"
+          >
+            {navLinks.map((item) => {
+              const isActive = pathname.includes(item.match);
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className={`nav-link-item group relative py-2 text-[14px] font-bold transition-colors duration-200 xl:text-[15px] ${
+                    isActive ? "text-[#c59139]" : "text-[#072338] hover:text-[#c59139]"
+                  }`}
+                >
+                  <span>{item.label}</span>
+                  <span
+                    className={`absolute bottom-0 left-0 h-[2px] w-0 bg-[#c59139] transition-all duration-300 group-hover:w-full ${
+                      isActive ? "w-full" : ""
+                    }`}
+                  />
+                </a>
+              );
+            })}
+          </nav>
+
+          {/* Mobile Hamburger Button */}
+          <div className="flex items-center lg:hidden">
+            <button
+              aria-expanded={open}
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="flex h-11 w-11 items-center justify-center rounded-lg text-[#072338] transition hover:bg-gray-100"
+              onClick={() => setOpen((val) => !val)}
+              type="button"
+            >
+              <span className="sr-only">Toggle navigation</span>
+              <div className="flex flex-col gap-1.5">
+                <span
+                  className={`block h-0.5 w-6 bg-[#072338] transition-transform duration-300 ${
+                    open ? "translate-y-2 rotate-45" : ""
+                  }`}
+                />
+                <span
+                  className={`block h-0.5 w-6 bg-[#072338] transition-opacity duration-300 ${
+                    open ? "opacity-0" : ""
+                  }`}
+                />
+                <span
+                  className={`block h-0.5 w-6 bg-[#072338] transition-transform duration-300 ${
+                    open ? "-translate-y-2 -rotate-45" : ""
+                  }`}
+                />
+              </div>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Drawer */}
+      <div
+        aria-hidden={!open}
+        className={`fixed inset-0 z-40 bg-white/98 backdrop-blur-xl transition-all duration-300 lg:hidden ${
+          open
+            ? "pointer-events-auto opacity-100 translate-y-0"
+            : "pointer-events-none opacity-0 -translate-y-4"
+        }`}
+      >
+        <div className="flex h-full flex-col px-6 pt-24 pb-8 overflow-y-auto">
+          <div className="border-b border-gray-100 pb-4 mb-4">
+            <p className="text-[12px] font-extrabold uppercase tracking-widest text-[#c59139]">
+              Menu
+            </p>
+          </div>
+          <ul className="flex flex-col divide-y divide-gray-100">
+            {navLinks.map((item) => (
+              <li key={item.label} className="py-3.5">
+                <a
+                  href={item.href}
+                  onClick={close}
+                  className="flex items-center justify-between text-[17px] font-bold text-[#072338] hover:text-[#c59139] transition"
+                >
+                  <span>{item.label}</span>
+                  <span className="text-gray-400">→</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-8 pt-6 border-t border-gray-100">
+            <a
+              href="/#admissions"
+              onClick={close}
+              className="flex w-full items-center justify-center rounded-full bg-[#9a1827] py-3.5 text-center text-[13px] font-bold uppercase tracking-wider text-white shadow-md transition hover:bg-[#7f1320]"
+            >
+              Apply Now →
+            </a>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }

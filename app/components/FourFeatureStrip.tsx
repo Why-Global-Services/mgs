@@ -1,37 +1,90 @@
+"use client";
+
+import { createCardFlow, useGSAPScope, gsap } from "../lib/motion";
+import { homepageImages } from "../lib/images";
+
 export function FourFeatureStrip() {
+  const containerRef = useGSAPScope<HTMLElement>((ctx, isReduced) => {
+    if (isReduced) return;
+
+    createCardFlow({
+      root: containerRef.current,
+      cardSelector: ".dark-feature-item",
+      motions: [
+        { x: -70, y: 52, rotation: -4.8, scale: 0.9, zIndex: 4 },
+        { x: -24, y: -42, rotation: 3.4, scale: 0.94, zIndex: 2 },
+        { x: 30, y: 38, rotation: -3.7, scale: 0.93, zIndex: 3 },
+        { x: 70, y: -32, rotation: 4.6, scale: 0.9, zIndex: 1 },
+      ],
+      start: "top 92%",
+      end: "top 34%",
+      stagger: 0.15,
+      isReduced,
+    });
+
+    gsap.fromTo(
+      ".dark-feature-underline",
+      { scaleX: 0, transformOrigin: "center center" },
+      {
+        scaleX: 1,
+        duration: 0.65,
+        stagger: 0.15,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 80%",
+          once: true,
+        },
+      }
+    );
+
+    // Subtle background parallax
+    gsap.to(".dark-feature-bg", {
+      yPercent: 10,
+      ease: "none",
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+  }, []);
+
   const features = [
-    { title: "Global Curriculum", subtitle: "IB & Cambridge" },
-    { title: "Holistic Learning", subtitle: "Consciousness & Wellness" },
-    { title: "Future-Ready Skills", subtitle: "Innovation & Robotics" },
-    { title: "Lifelong Values", subtitle: "Principled Leadership" },
+    { title: "Global\nCurriculum" },
+    { title: "Holistic\nLearning" },
+    { title: "Future-Ready\nSkills" },
+    { title: "Lifelong\nValues" },
   ];
 
   return (
-    <section className="relative overflow-hidden bg-[#072432] py-20 lg:py-28">
-      {/* Background Campus Image with Deep Tinted Dark Overlay */}
-      <div className="absolute inset-0">
+    <section
+      ref={containerRef}
+      className="relative overflow-hidden bg-[#071c2a] py-16 sm:py-20 lg:py-24"
+    >
+      {/* Background Dusk Campus Image with Deep Navy Overlay */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <img
-          src="/assets/optimized/hero-campus.jpg"
-          alt="MGS Green Campus"
-          className="h-full w-full object-cover object-center opacity-30"
+          src={homepageImages.campusDark.src}
+          alt={homepageImages.campusDark.alt}
+          className="dark-feature-bg h-[115%] w-full object-cover object-center opacity-25 will-change-transform"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#072432]/95 via-[#0a3d2e]/90 to-[#072432]/95" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#071c2a]/95 via-[#082336]/88 to-[#071c2a]/95" />
       </div>
 
       <div className="relative mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-2 gap-8 divide-y divide-white/10 sm:divide-y-0 sm:divide-x sm:divide-white/15 lg:grid-cols-4 lg:gap-0">
-          {features.map((feature, index) => (
+        <div className="relative isolate grid grid-cols-2 divide-y divide-white/10 sm:divide-y-0 sm:divide-x sm:divide-white/15 lg:grid-cols-4">
+          {features.map((item) => (
             <div
-              key={index}
-              className="group flex flex-col items-center justify-center px-4 py-4 text-center transition duration-300 lg:px-8"
+              key={item.title}
+              className="dark-feature-item group flex h-full flex-col items-center justify-center p-6 text-center transition-all duration-300 hover:bg-white/[0.04]"
             >
-              <h3 className="font-serif text-[20px] font-bold tracking-wide text-white transition duration-300 group-hover:text-raya-gold sm:text-[24px] lg:text-[26px]">
-                {feature.title}
+              <h3 className="font-serif text-[20px] sm:text-[24px] lg:text-[28px] font-bold leading-snug tracking-wide text-white transition-colors duration-300 group-hover:text-[#c59139] whitespace-pre-line">
+                {item.title}
               </h3>
-              <p className="mt-2 text-[12px] font-bold uppercase tracking-[0.14em] text-white/60 transition group-hover:text-white/90">
-                {feature.subtitle}
-              </p>
+              <div className="dark-feature-underline mt-4 h-[2px] w-10 bg-[#c59139]" />
             </div>
           ))}
         </div>

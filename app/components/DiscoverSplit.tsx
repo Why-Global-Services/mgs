@@ -1,72 +1,131 @@
-import { zipAsset } from "./data";
+"use client";
+
+import { createCardFlow, useGSAPScope, gsap } from "../lib/motion";
+import { homepageImages } from "../lib/images";
 
 export function DiscoverSplit() {
+  const sectionRef = useGSAPScope<HTMLElement>((ctx, isReduced) => {
+    if (isReduced) return;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 80%",
+        once: true,
+      },
+      defaults: { ease: "power3.out" },
+    });
+
+    // 1. Text line mask reveal
+    tl.fromTo(
+      ".discover-heading .line-mask-inner",
+      { yPercent: 110, opacity: 0 },
+      { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.12 }
+    );
+
+    tl.fromTo(
+      ".discover-body",
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.6 },
+      "-=0.4"
+    );
+
+    // CTA follows the editorial copy; the adjacent cards are driven by scroll below.
+    tl.fromTo(
+      ".discover-cta",
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 0.5 },
+      "-=0.4"
+    );
+
+    createCardFlow({
+      root: sectionRef.current,
+      cardSelector: ".discover-flow-card",
+      imageSelector: ".discover-img",
+      motions: [
+        { x: -84, y: 94, rotation: -6.8, scale: 0.87, zIndex: 2 },
+        { x: 72, y: -62, rotation: 5.6, scale: 0.9, zIndex: 3 },
+      ],
+      start: "top 92%",
+      end: "top 22%",
+      stagger: 0.3,
+      isReduced,
+    });
+  }, []);
+
   return (
-    <section className="bg-white py-16 lg:py-24">
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-24"
+      id="discover"
+    >
       <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_1.15fr] xl:gap-16">
-          {/* Left Text Content */}
-          <div className="max-w-[560px]">
-            <p className="text-[12px] font-black uppercase tracking-widest text-[#c48f3b]">
-              Discover MGS
-            </p>
-            <h2 className="mt-3 font-serif text-[32px] font-bold leading-[1.15] text-[#073042] sm:text-[40px] lg:text-[46px]">
-              Discover <br />
-              <span className="text-[#0a3d2e]">a World of Possibilities</span>
+        <div className="relative isolate grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_1.3fr_0.9fr] xl:gap-12">
+          {/* ============================================================ */}
+          {/* PART 1: LEFT EDITORIAL NARRATIVE                            */}
+          {/* ============================================================ */}
+          <div className="max-w-[480px]">
+            <h2 className="discover-heading font-serif text-[34px] sm:text-[42px] lg:text-[48px] font-bold leading-[1.14] text-[#072338]">
+              <span className="line-mask block">
+                <span className="line-mask-inner">Discover</span>
+              </span>
+              <span className="line-mask block">
+                <span className="line-mask-inner">
+                  <span className="relative inline-block text-[#072338]">
+                    a World of Possibilities
+                    <span className="absolute -bottom-1 left-0 h-[2px] w-20 bg-[#c59139]" />
+                  </span>
+                </span>
+              </span>
             </h2>
-            <p className="mt-6 text-[16px] leading-[1.75] text-raya-muted sm:text-[17px]">
-              At Maharishi Global School, we nurture curious minds, compassionate hearts,
+
+            <p className="discover-body mt-6 text-[15px] sm:text-[16px] leading-[1.75] text-[#2d4756]">
+              At Maharishi Global School, we nurture curious minds, compassionate hearts
               and principled leaders through a globally respected IB and Cambridge curriculum.
-              Our holistic learning approach connects intellectual inquiry, inner stability,
-              and purposeful action in a state-of-the-art campus.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+
+            <div className="discover-cta mt-8">
               <a
-                href="/admissions/apply-now"
-                className="inline-flex min-h-12 items-center justify-center rounded-sm bg-[#9c182f] px-8 text-[13px] font-bold uppercase tracking-wider text-white shadow-md transition hover:bg-[#801326]"
+                href="#admissions"
+                className="btn-editorial group inline-flex min-h-11 items-center justify-center gap-2 rounded-sm bg-[#9a1827] px-7 text-[12px] font-bold uppercase tracking-wider text-white shadow-md hover:bg-[#801320]"
               >
-                Apply Now
-              </a>
-              <a
-                href="/about-us/vision-mission"
-                className="inline-flex min-h-12 items-center justify-center border border-[#0a3d2e]/30 px-6 text-[13px] font-bold uppercase tracking-wider text-[#0a3d2e] transition hover:bg-[#0a3d2e] hover:text-white"
-              >
-                Our Philosophy ?
+                <span>Apply Now</span>
+                <span className="btn-arrow font-sans">→</span>
               </a>
             </div>
           </div>
 
-          {/* Right Image Composition */}
-          <div className="relative">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1.4fr_1fr] items-stretch">
-              {/* Main Photo of Running Students */}
-              <div className="group relative overflow-hidden rounded-lg shadow-xl">
-                <img
-                  src="/assets/hero-students-campus.jpg"
-                  alt="MGS Students on Campus"
-                  className="h-full min-h-[380px] w-full object-cover object-top transition duration-700 group-hover:scale-105"
-                  loading="lazy"
-                />
-              </div>
+          {/* ============================================================ */}
+          {/* PART 2: MIDDLE STUDENTS RUNNING PHOTO                        */}
+          {/* ============================================================ */}
+          <div className="discover-flow-card relative h-full">
+            <div className="discover-img-wrapper group relative h-full min-h-[360px] overflow-hidden rounded-xl shadow-lg lg:min-h-[440px]">
+              <img
+                src={homepageImages.discover.src}
+                alt={homepageImages.discover.alt}
+                className="discover-img h-full w-full object-cover object-center will-change-transform"
+                loading="lazy"
+              />
+            </div>
+          </div>
 
-              {/* Accent Editorial Card */}
-              <div className="flex flex-col justify-center rounded-lg bg-[#9c182f] p-8 text-white shadow-xl sm:p-10">
-                <h3 className="font-serif text-[26px] font-bold leading-tight sm:text-[30px]">
-                  Learning <br />
-                  Beyond <br />
-                  Boundaries
-                </h3>
-                <div className="my-5 h-[2px] w-12 bg-white/40" />
-                <p className="text-[14px] font-medium leading-relaxed text-white/90">
-                  Ideas. <br />
-                  Innovation. <br />
-                  Impact.
-                </p>
-                <div className="mt-6">
-                  <span className="text-[11px] font-extrabold uppercase tracking-widest text-white/70">
-                    MGS Advantage
-                  </span>
-                </div>
+          {/* ============================================================ */}
+          {/* PART 3: RIGHT CRIMSON "LEARNING BEYOND BOUNDARIES" PANEL    */}
+          {/* ============================================================ */}
+          <div className="discover-flow-card relative h-full">
+            <div className="discover-red-panel flex h-full min-h-[360px] flex-col justify-center rounded-xl bg-[#9a1827] p-8 text-white shadow-xl sm:p-10 lg:min-h-[440px]">
+              <h3 className="font-serif text-[28px] sm:text-[32px] lg:text-[36px] font-bold leading-tight text-white">
+                Learning <br />
+                Beyond <br />
+                Boundaries
+              </h3>
+
+              <div className="my-6 h-[2px] w-12 bg-white/40" />
+
+              <div className="space-y-1.5 text-[15px] sm:text-[16px] font-medium tracking-wide text-white/90">
+                <p>Ideas.</p>
+                <p>Innovation.</p>
+                <p>Impact.</p>
               </div>
             </div>
           </div>

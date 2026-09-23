@@ -1,44 +1,121 @@
-import { zipAsset } from "./data";
+"use client";
+
+import { createCardFlow, useGSAPScope, gsap } from "../lib/motion";
+import { homepageImages } from "../lib/images";
 
 export function CommunitySplit() {
+  const sectionRef = useGSAPScope<HTMLElement>((ctx, isReduced) => {
+    if (isReduced) return;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 80%",
+        once: true,
+      },
+      defaults: { ease: "power3.out" },
+    });
+
+    // Eyebrow and copy rise while the image/copy cards settle from a collage.
+    tl.fromTo(
+      ".community-eyebrow",
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.6 },
+      "+=0.1"
+    );
+
+    tl.fromTo(
+      ".community-heading .line-mask-inner",
+      { yPercent: 110, opacity: 0 },
+      { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.12 },
+      "-=0.4"
+    );
+
+    // 3. Body & CTA fade-up
+    tl.fromTo(
+      ".community-body",
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.6 },
+      "-=0.4"
+    );
+
+    tl.fromTo(
+      ".community-cta",
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.5 },
+      "-=0.3"
+    );
+
+    createCardFlow({
+      root: sectionRef.current,
+      cardSelector: ".community-flow-card",
+      imageSelector: ".community-img",
+      motions: [
+        { x: -78, y: 76, rotation: -5.4, scale: 0.88, zIndex: 3 },
+        { x: 82, y: -54, rotation: 4.8, scale: 0.92, zIndex: 2 },
+      ],
+      start: "top 90%",
+      end: "top 24%",
+      stagger: 0.32,
+      isReduced,
+    });
+  }, []);
+
   return (
-    <section className="bg-white py-16 lg:py-24">
+    <section
+      ref={sectionRef}
+      className="bg-white py-16 sm:py-20 lg:py-24"
+    >
       <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 xl:gap-20">
-          {/* Left Student Library Reading Image */}
-          <div className="group relative overflow-hidden rounded-xl shadow-2xl">
-            <img
-              src={zipAsset("story-nook")}
-              alt="MGS Student Reading in Library"
-              className="h-[380px] w-full object-cover object-center transition duration-700 group-hover:scale-105 sm:h-[460px] lg:h-[500px]"
-              loading="lazy"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
+        <div className="relative isolate grid grid-cols-1 items-center gap-10 lg:grid-cols-2 xl:gap-16">
+          {/* ============================================================ */}
+          {/* LEFT: STUDENT LIBRARY READING IMAGE                          */}
+          {/* ============================================================ */}
+          <div className="community-flow-card relative">
+            <div className="community-img-wrapper group relative overflow-hidden rounded-xl shadow-xl">
+              <img
+                src={homepageImages.community.src}
+                alt={homepageImages.community.alt}
+                className="community-img h-[340px] w-full object-cover object-center sm:h-[420px] lg:h-[460px] will-change-transform"
+                loading="lazy"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+            </div>
           </div>
 
-          {/* Right Editorial Text */}
-          <div className="max-w-[540px] lg:pl-4">
-            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#c48f3b] sm:text-[12px]">
+          {/* ============================================================ */}
+          {/* RIGHT: EDITORIAL COPY                                       */}
+          {/* ============================================================ */}
+          <div className="community-flow-card relative max-w-[540px] lg:pl-6">
+            <p className="community-eyebrow text-[11px] sm:text-[12px] font-extrabold uppercase tracking-[0.2em] text-[#314e58]">
               More Than a School
             </p>
-            <h2 className="mt-3 font-serif text-[34px] font-bold leading-[1.12] text-[#073042] sm:text-[44px] lg:text-[50px]">
-              A Community <br />
-              <span className="text-[#0a3d2e]">That Belongs</span>
+
+            <h2 className="community-heading mt-2.5 font-serif text-[34px] sm:text-[44px] lg:text-[50px] font-bold leading-[1.12] text-[#072338]">
+              <span className="line-mask block">
+                <span className="line-mask-inner">A Community</span>
+              </span>
+              <span className="line-mask block">
+                <span className="line-mask-inner">
+                  <span className="relative inline-block text-[#072338]">
+                    That Belongs
+                    <span className="absolute -bottom-1 left-0 h-[2px] w-14 bg-[#c59139]" />
+                  </span>
+                </span>
+              </span>
             </h2>
-            <div className="my-6 h-[2px] w-14 bg-[#c48f3b]" />
-            <p className="text-[16px] leading-[1.8] text-raya-muted sm:text-[17px]">
-              We believe in fostering a safe, inclusive and inspiring environment where every learner
-              is known, valued, and encouraged to grow. MGS brings together experienced international
-              educators, reflective inquiry, and strong parent partnerships to empower students as
-              compassionate citizens.
+
+            <p className="community-body mt-6 text-[15px] sm:text-[16px] leading-[1.8] text-[#2d4756]">
+              We believe in fostering a safe, inclusive and inspiring environment where every learner is known, valued and encouraged to grow.
             </p>
-            <div className="mt-8">
+
+            <div className="community-cta mt-8">
               <a
                 href="/home/why-mgs"
-                className="inline-flex items-center gap-2 rounded-sm border border-[#073042] px-7 py-3 text-[13px] font-bold uppercase tracking-wider text-[#073042] transition-all duration-300 hover:bg-[#073042] hover:text-white"
+                className="btn-editorial group inline-flex items-center gap-2 rounded-sm border border-[#c59139] bg-white px-6 py-2.5 text-[12px] font-bold uppercase tracking-wider text-[#072338] shadow-2xs hover:bg-[#c59139] hover:text-white"
               >
                 <span>Why MGS</span>
-                <span aria-hidden="true">?</span>
+                <span className="btn-arrow font-sans">→</span>
               </a>
             </div>
           </div>

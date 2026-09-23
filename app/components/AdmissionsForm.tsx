@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { ScrollReveal } from "./ScrollReveal";
 
 type Status = "idle" | "saving" | "success" | "error";
 
@@ -40,105 +41,194 @@ export function AdmissionsForm() {
 
       form.reset();
       setStatus("success");
-      setMessage("Admission inquiry saved successfully.");
+      setMessage("Thank you! Your admission inquiry has been received. Our team will contact you shortly.");
     } catch {
       setStatus("error");
-      setMessage("Something went wrong. Please try again.");
+      setMessage("Something went wrong. Please try again or call our admissions office.");
     }
   }
 
   return (
-    <section className="bg-[linear-gradient(135deg,#004e64_0%,#00875a_54%,#00a8cc_100%)] px-5 py-16 text-raya-cream sm:px-8 md:px-10 md:py-24 lg:px-10" id="admissions">
-      <div className="mx-auto grid w-full max-w-[1280px] gap-10 border-y border-raya-gold/35 py-12 md:py-16 lg:grid-cols-[0.75fr_1fr]">
-        <div>
-          <h2 className="text-[36px] font-semibold leading-[1.1] text-white md:text-[56px]">
-            Admissions
-          </h2>
-          <p className="mt-7 text-[18px] leading-[1.6] text-white/82 md:text-[21px]">
-            Begin your inquiry with Maharishi Global School. Our admissions
-            team will use your details to help you book a campus visit, schedule
-            a call, or start the application process.
-          </p>
-          <a
-            className="mt-8 inline-flex min-h-12 items-center justify-center rounded-full border border-white/40 bg-white px-6 text-[12px] font-black uppercase text-raya-navy shadow-[0_16px_36px_rgba(7,48,66,0.2)] transition hover:-translate-y-px hover:bg-raya-gold"
-            download
-            href="/assets/mgs-brochure.pdf"
-          >
-            Download Brochure
-          </a>
-        </div>
-        <form className="grid gap-4 sm:grid-cols-2" onSubmit={handleSubmit}>
-          <label className="grid gap-2 text-[13px] font-extrabold uppercase text-raya-gold">
-            Parent Name
-            <input className="min-h-12 w-full rounded-[12px] border border-white/28 bg-white/16 px-3.5 py-3 font-[inherit] normal-case text-white outline-none transition focus:border-raya-gold focus:bg-white/22" name="parentName" required />
-          </label>
-          <label className="grid gap-2 text-[13px] font-extrabold uppercase text-raya-gold">
-            Student Name
-            <input className="min-h-12 w-full rounded-[12px] border border-white/28 bg-white/16 px-3.5 py-3 font-[inherit] normal-case text-white outline-none transition focus:border-raya-gold focus:bg-white/22" name="studentName" required />
-          </label>
-          <label className="grid gap-2 text-[13px] font-extrabold uppercase text-raya-gold">
-            Phone Number
-            <input className="min-h-12 w-full rounded-[12px] border border-white/28 bg-white/16 px-3.5 py-3 font-[inherit] normal-case text-white outline-none transition focus:border-raya-gold focus:bg-white/22" name="phone" required />
-          </label>
-          <label className="grid gap-2 text-[13px] font-extrabold uppercase text-raya-gold">
-            Email
-            <input className="min-h-12 w-full rounded-[12px] border border-white/28 bg-white/16 px-3.5 py-3 font-[inherit] normal-case text-white outline-none transition focus:border-raya-gold focus:bg-white/22" name="email" required type="email" />
-          </label>
-          <label className="grid gap-2 text-[13px] font-extrabold uppercase text-raya-gold">
-            Grade Applying For
-            <select className="min-h-12 w-full rounded-[12px] border border-white/28 bg-white/16 px-3.5 py-3 font-[inherit] normal-case text-white outline-none transition focus:border-raya-gold focus:bg-white/22 [&>option]:text-raya-ink" name="grade" required defaultValue="">
-              <option disabled value="">
-                Select grade
-              </option>
-              <option>Early Years</option>
-              <option>Primary</option>
-              <option>Middle School</option>
-              <option>Senior School</option>
-            </select>
-          </label>
-          <label className="grid gap-2 text-[13px] font-extrabold uppercase text-raya-gold">
-            Preferred Curriculum
-            <select className="min-h-12 w-full rounded-[12px] border border-white/28 bg-white/16 px-3.5 py-3 font-[inherit] normal-case text-white outline-none transition focus:border-raya-gold focus:bg-white/22 [&>option]:text-raya-ink" name="curriculum" required defaultValue="">
-              <option disabled value="">
-                Select curriculum
-              </option>
-              <option>IB Pathway</option>
-              <option>Cambridge Pathway</option>
-              <option>Need Guidance</option>
-            </select>
-          </label>
-          <label className="grid gap-2 text-[13px] font-extrabold uppercase text-raya-gold">
-            Preferred Action
-            <select className="min-h-12 w-full rounded-[12px] border border-white/28 bg-white/16 px-3.5 py-3 font-[inherit] normal-case text-white outline-none transition focus:border-raya-gold focus:bg-white/22 [&>option]:text-raya-ink" name="preferredAction" required defaultValue="">
-              <option disabled value="">
-                Select action
-              </option>
-              <option>Book campus visit</option>
-              <option>Schedule a call</option>
-              <option>Purchase application form</option>
-            </select>
-          </label>
-          <label className="grid gap-2 text-[13px] font-extrabold uppercase text-raya-gold sm:col-span-2">
-            Message
-            <textarea className="min-h-[120px] w-full resize-y rounded-[12px] border border-white/28 bg-white/16 px-3.5 py-3 font-[inherit] normal-case text-white outline-none transition focus:border-raya-gold focus:bg-white/22" name="message" />
-          </label>
-          <button
-            className="inline-flex min-h-11 items-center justify-center rounded-full border border-raya-gold bg-raya-gold px-7 text-xs font-extrabold uppercase text-raya-ink shadow-[0_18px_40px_rgba(184,138,61,0.24)] transition hover:-translate-y-px hover:bg-raya-cream sm:col-span-2"
-            disabled={status === "saving"}
-            type="submit"
-          >
-            {status === "saving" ? "Saving..." : "Submit Inquiry"}
-          </button>
-          {message ? (
-            <p
-              className={`sm:col-span-2 ${
-                status === "success" ? "text-raya-gold" : "text-red-200"
-              }`}
-            >
-              {message}
-            </p>
-          ) : null}
-        </form>
+    <section className="relative overflow-hidden bg-[#071c2a] py-16 sm:py-20 lg:py-24 text-white" id="admissions">
+      {/* Decorative subtle background elements */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-[#c59139]/10 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-24 -bottom-24 h-96 w-96 rounded-full bg-[#0a3d2e]/20 blur-3xl"
+      />
+
+      <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-12">
+        <ScrollReveal>
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 items-start">
+            {/* Left Content */}
+            <div>
+              <p className="text-[11px] sm:text-[12px] font-extrabold uppercase tracking-[0.2em] text-[#c59139]">
+                Admissions 2026 - 2027
+              </p>
+              <h2 className="mt-3 font-serif text-[34px] sm:text-[44px] lg:text-[48px] font-bold leading-[1.12] text-white">
+                Begin Your Inquiry
+              </h2>
+              <div className="my-5 h-[2px] w-12 bg-[#c59139]" />
+              <p className="text-[15px] sm:text-[16px] leading-[1.8] text-white/80">
+                Take the first step toward world-class international education at Maharishi Global School.
+                Our admissions team is available to guide you through programme choices, schedule a campus tour,
+                and assist with your application.
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <a
+                  className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-6 text-[12px] font-bold uppercase tracking-wider text-white backdrop-blur-sm transition hover:border-[#c59139] hover:bg-[#c59139] hover:text-[#072338]"
+                  download
+                  href="/assets/mgs-brochure.pdf"
+                >
+                  <span>Download Brochure</span>
+                  <span className="transition-transform duration-200 group-hover:translate-x-1">
+                    ↓
+                  </span>
+                </a>
+                <a
+                  href="tel:+919994499850"
+                  className="text-[13px] font-bold text-[#c59139] hover:underline"
+                >
+                  Call +91 99944 99850
+                </a>
+              </div>
+            </div>
+
+            {/* Right Form Card */}
+            <div className="rounded-2xl border border-white/15 bg-white/5 p-6 backdrop-blur-md shadow-2xl sm:p-8 lg:p-10">
+              <form className="grid gap-4 sm:grid-cols-2" onSubmit={handleSubmit}>
+                <label className="grid gap-1.5 text-[12px] font-bold uppercase tracking-wider text-[#c59139]">
+                  Parent Name *
+                  <input
+                    className="min-h-11 w-full rounded-lg border border-white/20 bg-white/10 px-3.5 py-2.5 font-[inherit] normal-case text-white outline-none transition focus:border-[#c59139] focus:bg-white/15"
+                    name="parentName"
+                    placeholder="Enter full name"
+                    required
+                  />
+                </label>
+
+                <label className="grid gap-1.5 text-[12px] font-bold uppercase tracking-wider text-[#c59139]">
+                  Student Name *
+                  <input
+                    className="min-h-11 w-full rounded-lg border border-white/20 bg-white/10 px-3.5 py-2.5 font-[inherit] normal-case text-white outline-none transition focus:border-[#c59139] focus:bg-white/15"
+                    name="studentName"
+                    placeholder="Enter student's name"
+                    required
+                  />
+                </label>
+
+                <label className="grid gap-1.5 text-[12px] font-bold uppercase tracking-wider text-[#c59139]">
+                  Phone Number *
+                  <input
+                    className="min-h-11 w-full rounded-lg border border-white/20 bg-white/10 px-3.5 py-2.5 font-[inherit] normal-case text-white outline-none transition focus:border-[#c59139] focus:bg-white/15"
+                    name="phone"
+                    placeholder="+91 "
+                    required
+                    type="tel"
+                  />
+                </label>
+
+                <label className="grid gap-1.5 text-[12px] font-bold uppercase tracking-wider text-[#c59139]">
+                  Email Address *
+                  <input
+                    className="min-h-11 w-full rounded-lg border border-white/20 bg-white/10 px-3.5 py-2.5 font-[inherit] normal-case text-white outline-none transition focus:border-[#c59139] focus:bg-white/15"
+                    name="email"
+                    placeholder="name@example.com"
+                    required
+                    type="email"
+                  />
+                </label>
+
+                <label className="grid gap-1.5 text-[12px] font-bold uppercase tracking-wider text-[#c59139]">
+                  Grade Applying For *
+                  <select
+                    className="min-h-11 w-full rounded-lg border border-white/20 bg-white/10 px-3.5 py-2.5 font-[inherit] normal-case text-white outline-none transition focus:border-[#c59139] focus:bg-white/15 [&>option]:text-[#072338]"
+                    name="grade"
+                    required
+                    defaultValue=""
+                  >
+                    <option disabled value="">
+                      Select grade
+                    </option>
+                    <option>Early Years</option>
+                    <option>Primary</option>
+                    <option>Middle School</option>
+                    <option>Senior School</option>
+                  </select>
+                </label>
+
+                <label className="grid gap-1.5 text-[12px] font-bold uppercase tracking-wider text-[#c59139]">
+                  Preferred Curriculum *
+                  <select
+                    className="min-h-11 w-full rounded-lg border border-white/20 bg-white/10 px-3.5 py-2.5 font-[inherit] normal-case text-white outline-none transition focus:border-[#c59139] focus:bg-white/15 [&>option]:text-[#072338]"
+                    name="curriculum"
+                    required
+                    defaultValue=""
+                  >
+                    <option disabled value="">
+                      Select curriculum
+                    </option>
+                    <option>IB Pathway</option>
+                    <option>Cambridge Pathway</option>
+                    <option>Need Guidance</option>
+                  </select>
+                </label>
+
+                <label className="grid gap-1.5 text-[12px] font-bold uppercase tracking-wider text-[#c59139] sm:col-span-2">
+                  Preferred Action *
+                  <select
+                    className="min-h-11 w-full rounded-lg border border-white/20 bg-white/10 px-3.5 py-2.5 font-[inherit] normal-case text-white outline-none transition focus:border-[#c59139] focus:bg-white/15 [&>option]:text-[#072338]"
+                    name="preferredAction"
+                    required
+                    defaultValue=""
+                  >
+                    <option disabled value="">
+                      Select action
+                    </option>
+                    <option>Book campus visit</option>
+                    <option>Schedule a call</option>
+                    <option>Purchase application form</option>
+                  </select>
+                </label>
+
+                <label className="grid gap-1.5 text-[12px] font-bold uppercase tracking-wider text-[#c59139] sm:col-span-2">
+                  Questions / Message
+                  <textarea
+                    rows={3}
+                    className="w-full resize-y rounded-lg border border-white/20 bg-white/10 px-3.5 py-2.5 font-[inherit] normal-case text-white outline-none transition focus:border-[#c59139] focus:bg-white/15"
+                    name="message"
+                    placeholder="Tell us about your child's learning needs..."
+                  />
+                </label>
+
+                <button
+                  className="group mt-2 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#c59139] px-8 text-[13px] font-bold uppercase tracking-wider text-[#072338] shadow-lg transition-all duration-300 hover:bg-[#d8a64d] hover:scale-[1.02] active:scale-98 disabled:opacity-50 sm:col-span-2"
+                  disabled={status === "saving"}
+                  type="submit"
+                >
+                  <span>{status === "saving" ? "Submitting Inquiry..." : "Submit Inquiry"}</span>
+                  <span className="transition-transform duration-200 group-hover:translate-x-1">
+                    →
+                  </span>
+                </button>
+
+                {message ? (
+                  <p
+                    className={`mt-2 text-center text-[14px] font-semibold sm:col-span-2 ${
+                      status === "success" ? "text-[#c59139]" : "text-red-300"
+                    }`}
+                  >
+                    {message}
+                  </p>
+                ) : null}
+              </form>
+            </div>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );
