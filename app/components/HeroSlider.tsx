@@ -26,13 +26,28 @@ export function HeroSlider() {
       }
     );
 
-    // 2. Exact Order of Text Reveals:
     // (1) Eyebrow
     tl.fromTo(
       ".hero-eyebrow",
       { opacity: 0, y: 18 },
       { opacity: 1, y: 0, duration: 0.6 },
       "-=0.9"
+    );
+
+    // Guruji ethereal entrance
+    tl.fromTo(
+      ".hero-guruji",
+      { opacity: 0, scale: 0.96 },
+      { opacity: 0.95, scale: 1, duration: 0.8, ease: "power2.out" },
+      "<"
+    );
+
+    // Curiosity badge entrance
+    tl.fromTo(
+      ".hero-curiosity-badge",
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" },
+      "<+=0.1"
     );
 
     // (2) Main Heading: Line-by-line mask reveal
@@ -75,9 +90,20 @@ export function HeroSlider() {
       "-=0.35"
     );
 
-    // Hero Scroll: subtle parallax on image and text
+    // Hero Scroll: subtle parallax on image, Guruji, and text
     gsap.to(".hero-bg-img", {
       yPercent: 10,
+      ease: "none",
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+
+    gsap.to(".hero-guruji", {
+      yPercent: 8,
       ease: "none",
       scrollTrigger: {
         trigger: containerRef.current,
@@ -102,27 +128,54 @@ export function HeroSlider() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden bg-[#fafaf9] min-h-[580px] sm:min-h-[640px] lg:min-h-[740px] xl:min-h-[820px] flex items-center"
+      className="relative w-full overflow-hidden bg-[#fafaf9] min-h-[550px] xs:min-h-[570px] sm:min-h-[640px] lg:min-h-[740px] xl:min-h-[820px] flex items-center"
     >
       {/* FULL-WIDTH HERO IMAGE BACKGROUND (NO SPLIT CONTAINER) */}
       <div className="hero-bg-wrapper absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
         <img
           src={homepageImages.hero.src}
           alt={homepageImages.hero.alt}
-          className="hero-bg-img h-full w-full object-cover object-[82%_center] sm:object-[72%_center] lg:object-center"
+          className="hero-bg-img h-full w-full object-cover object-[85%_center] sm:object-[78%_center] lg:object-right xl:object-[98%_center]"
           loading="eager"
         />
 
         {/* Localized Subtle Gradient Overlay behind Text for High Contrast & Zero Overlap */}
         <div
           aria-hidden="true"
-          className="absolute inset-y-0 left-0 w-full sm:w-[78%] lg:w-[58%] xl:w-[52%] bg-gradient-to-r from-white via-white/95 to-white/50 sm:to-white/20 lg:to-transparent pointer-events-none"
+          className="absolute inset-y-0 left-0 w-full sm:w-[68%] lg:w-[52%] xl:w-[48%] bg-gradient-to-r from-white via-white/90 to-transparent pointer-events-none"
         />
+
+        {/* Floating HD Authentic Guruji Ethereal Layer */}
+        <div
+          aria-hidden="true"
+          className="hero-guruji absolute z-15 pointer-events-none select-none
+                     top-4 xs:top-5 sm:top-6 md:top-5 lg:top-[9%] xl:top-[12%]
+                     right-3 xs:right-5 sm:right-[32%] md:right-[30%] lg:right-auto lg:left-[44%] xl:left-[37.5%] 2xl:left-[45%]
+                     w-[95px] xs:w-[110px] sm:w-[130px] md:w-[145px] lg:w-[180px] xl:w-[205px]
+                     opacity-95"
+        >
+          <img
+            src="/assets/guruji_ethereal_cloud.png"
+            alt="Maharishi Mahesh Yogi"
+            className="w-full h-auto drop-shadow-sm"
+            loading="eager"
+          />
+        </div>
+      </div>
+
+      {/* Floating "Curiosity Creates a Brighter World" Editorial Badge */}
+      <div className="hero-curiosity-badge absolute right-3 xs:right-5 sm:right-8 lg:right-12 bottom-4 sm:bottom-6 lg:bottom-8 z-20 pointer-events-none rounded-lg bg-[#072338]/85 p-3 sm:p-4 lg:p-5 backdrop-blur-md shadow-xl border border-white/10 text-white max-w-[165px] xs:max-w-[190px] sm:max-w-[230px]">
+        <p className="font-serif text-[13px] xs:text-[15px] sm:text-[19px] lg:text-[21px] leading-snug font-normal text-white">
+          Curiosity<br />
+          Creates<br />
+          a Brighter World
+        </p>
+        <div className="mt-2 sm:mt-2.5 lg:mt-3 h-[2px] w-7 sm:w-10 bg-[#c59139]" />
       </div>
 
       {/* TEXT & HERO CONTENT OVERLAY ON THE LEFT SIDE */}
-      <div className="relative z-20 mx-auto w-full max-w-[1400px] px-5 sm:px-8 lg:px-12 py-12 sm:py-18 lg:py-24">
-        <div className="hero-content-col max-w-[320px] xs:max-w-[380px] sm:max-w-[480px] lg:max-w-[580px]">
+      <div className="relative z-20 mx-auto w-full max-w-[1400px] px-5 sm:px-8 lg:px-12 pt-7 pb-10 sm:py-18 lg:py-24">
+        <div className="hero-content-col max-w-[235px] xs:max-w-[265px] sm:max-w-[360px] md:max-w-[390px] lg:max-w-[470px] xl:max-w-[520px]">
           {/* 1. Top Motto Eyebrow */}
           <div>
             <p className="hero-eyebrow text-[10px] sm:text-[12px] md:text-[13px] font-extrabold uppercase tracking-[0.16em] sm:tracking-[0.18em] text-[#072338]">

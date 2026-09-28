@@ -38,9 +38,9 @@ export function FourFeatureStrip() {
       }
     );
 
-    // Subtle background parallax
+    // Gentle, subtle background parallax
     gsap.to(".dark-feature-bg", {
-      yPercent: 10,
+      yPercent: 5,
       ease: "none",
       scrollTrigger: {
         trigger: containerRef.current,
@@ -63,15 +63,15 @@ export function FourFeatureStrip() {
       ref={containerRef}
       className="relative overflow-hidden bg-[#071c2a] py-16 sm:py-20 lg:py-24"
     >
-      {/* Background Dusk Campus Image with Deep Navy Overlay */}
+      {/* Background Campus Image with Subtly Visible Texture Beneath Deep Navy Overlay */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <img
           src={homepageImages.campusDark.src}
           alt={homepageImages.campusDark.alt}
-          className="dark-feature-bg h-[115%] w-full object-cover object-center opacity-25 will-change-transform"
+          className="dark-feature-bg h-[110%] w-full object-cover object-center opacity-30 will-change-transform"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#071c2a]/95 via-[#082336]/88 to-[#071c2a]/95" />
+        <div className="absolute inset-0 bg-[#071c2a]/85" />
       </div>
 
       <div className="relative mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12">
