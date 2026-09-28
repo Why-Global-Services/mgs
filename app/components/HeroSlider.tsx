@@ -13,15 +13,15 @@ export function HeroSlider() {
     tl.fromTo(
       ".hero-bg-wrapper",
       {
-        clipPath: "inset(3% 0% 3% 0%)",
-        scale: 1.05,
-        opacity: 0.75,
+        clipPath: "inset(2% 0% 2% 0%)",
+        scale: 1.03,
+        opacity: 0.85,
       },
       {
         clipPath: "inset(0% 0% 0% 0%)",
         scale: 1,
         opacity: 1,
-        duration: 1.4,
+        duration: 0.8,
         ease: "power2.inOut",
       }
     );
@@ -30,49 +30,57 @@ export function HeroSlider() {
     // (1) Eyebrow
     tl.fromTo(
       ".hero-eyebrow",
-      { opacity: 0, y: 18 },
-      { opacity: 1, y: 0, duration: 0.6 },
-      "-=0.9"
+      { opacity: 0, y: 14 },
+      { opacity: 1, y: 0, duration: 0.45 },
+      "-=0.5"
     );
 
     // (2) Main Heading: Line-by-line mask reveal
     tl.fromTo(
       ".hero-heading .line-mask-inner",
-      { yPercent: 115, opacity: 0 },
-      { yPercent: 0, opacity: 1, duration: 0.85, stagger: 0.14 },
-      "-=0.4"
+      { yPercent: 110, opacity: 0 },
+      { yPercent: 0, opacity: 1, duration: 0.55, stagger: 0.1 },
+      "-=0.3"
     );
 
     // Gold underline under 'Here'
     tl.fromTo(
       ".hero-heading-underline",
       { scaleX: 0, transformOrigin: "left center" },
-      { scaleX: 1, duration: 0.6, ease: "power2.out" },
-      "-=0.3"
+      { scaleX: 1, duration: 0.4, ease: "power2.out" },
+      "-=0.2"
     );
 
     // (3) Subtitle
     tl.fromTo(
       ".hero-subtitle",
-      { opacity: 0, y: 18 },
-      { opacity: 1, y: 0, duration: 0.6 },
-      "-=0.3"
+      { opacity: 0, y: 14 },
+      { opacity: 1, y: 0, duration: 0.4 },
+      "-=0.2"
     );
 
     // (4) Apply Now button
     tl.fromTo(
       ".hero-btn-apply",
-      { opacity: 0, y: 14 },
-      { opacity: 1, y: 0, duration: 0.5 },
-      "-=0.25"
+      { opacity: 0, y: 12 },
+      { opacity: 1, y: 0, duration: 0.35 },
+      "-=0.15"
     );
 
     // (5) Explore Our School button
     tl.fromTo(
       ".hero-btn-explore",
+      { opacity: 0, y: 12 },
+      { opacity: 1, y: 0, duration: 0.35 },
+      "-=0.25"
+    );
+
+    // (6) Right-Side Editorial Quote Card
+    tl.fromTo(
+      ".hero-quote-card",
       { opacity: 0, y: 14 },
-      { opacity: 1, y: 0, duration: 0.5 },
-      "-=0.35"
+      { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" },
+      "-=0.2"
     );
 
     // Hero Scroll: subtle parallax on image and text
@@ -109,14 +117,14 @@ export function HeroSlider() {
         <img
           src={homepageImages.hero.src}
           alt={homepageImages.hero.alt}
-          className="hero-bg-img h-full w-full object-cover object-[82%_center] sm:object-[72%_center] lg:object-center"
+          className="hero-bg-img h-full w-full object-cover object-[52%_top] sm:object-[50%_top] lg:object-[48%_top]"
           loading="eager"
         />
 
-        {/* Localized Subtle Gradient Overlay behind Text for High Contrast & Zero Overlap */}
+        {/* Localized Crisp Gradient Overlay behind Text for High Contrast & Zero Guruji Obstruction */}
         <div
           aria-hidden="true"
-          className="absolute inset-y-0 left-0 w-full sm:w-[78%] lg:w-[58%] xl:w-[52%] bg-gradient-to-r from-white via-white/95 to-white/50 sm:to-white/20 lg:to-transparent pointer-events-none"
+          className="absolute inset-y-0 left-0 w-full sm:w-[50%] lg:w-[38%] xl:w-[34%] bg-gradient-to-r from-white via-white/80 to-transparent pointer-events-none"
         />
       </div>
 
@@ -164,12 +172,22 @@ export function HeroSlider() {
             </a>
             <a
               href="#discover"
-              className="hero-btn-explore btn-editorial group inline-flex items-center justify-center gap-2.5 rounded-full border-2 border-[#072338] bg-white/80 px-5 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-[13px] font-bold uppercase tracking-wider text-[#072338] shadow-xs backdrop-blur-xs hover:bg-[#072338] hover:text-white"
+              className="hero-btn-explore btn-editorial group inline-flex items-center justify-center gap-2.5 rounded-full border-2 border-[#072338] bg-white px-5 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-[13px] font-bold uppercase tracking-wider text-[#072338] shadow-xs hover:bg-[#072338] hover:text-white"
             >
               <span>Explore Our School</span>
               <span className="btn-arrow font-sans">→</span>
             </a>
           </div>
+        </div>
+
+        {/* 5. RIGHT-SIDE BANNER CARD - Fully Visible, Responsive, Unclipped */}
+        <div className="hero-quote-card mt-6 sm:mt-0 sm:absolute sm:bottom-8 sm:right-6 lg:bottom-12 lg:right-8 xl:right-12 z-20 w-auto min-w-[200px] max-w-[240px] rounded-lg bg-[#072338]/95 p-4 sm:p-5 lg:p-6 text-white shadow-2xl border border-white/10 pointer-events-auto">
+          <p className="font-serif text-[17px] sm:text-[19px] lg:text-[22px] font-normal leading-[1.28] tracking-normal text-[#f8fafc]">
+            Curiosity<br />
+            Creates<br />
+            a Brighter World
+          </p>
+          <div className="mt-3 sm:mt-3.5 h-[2px] sm:h-[2.5px] w-8 sm:w-10 bg-[#c59139]" />
         </div>
       </div>
     </section>
