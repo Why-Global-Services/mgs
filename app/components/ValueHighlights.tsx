@@ -160,19 +160,18 @@ export function ValueHighlights() {
     const cards = gsap.utils.toArray<HTMLElement>(".feature-strip-card");
     const glyphs = gsap.utils.toArray<HTMLElement>(".feature-strip-glyph");
     const icons = gsap.utils.toArray<HTMLElement>(".feature-strip-icon");
+    const rings = gsap.utils.toArray<SVGCircleElement>(".feature-strip-ring");
     const titles = gsap.utils.toArray<HTMLElement>(".feature-strip-title");
     const subtitles = gsap.utils.toArray<HTMLElement>(".feature-strip-subtitle");
+    const shines = gsap.utils.toArray<HTMLElement>(".feature-strip-shine");
+    const bar = containerRef.current?.querySelector(".feature-strip-bar");
 
-    // Direction: -1 = left side-la irundhu varum, 1 = right side-la irundhu varum
-    // Desktop/tablet: first 2 left-la irundhu, last 2 right-la irundhu
-    // Mobile: left, right, left, right (zig-zag)
+    // Direction: -1 = left side-la irundhu, 1 = right side-la irundhu
+    // Desktop/tablet: first 2 left, last 2 right | Mobile: zig-zag
     const isMobile = window.innerWidth < 640;
     const dir = (i: number) => (isMobile ? (i % 2 === 0 ? -1 : 1) : i < 2 ? -1 : 1);
 
-    // Ovvoru dhadavai section screen-ku varum bodhum animation replay aagum:
-    // - keezha scroll panni varum bodhu  -> play
-    // - mela scroll panni varum bodhu    -> play
-    // - section screen-ai vittu pogum bodhu -> reset (adutha dhadavai ready)
+    // Section screen-ku ovvoru dhadavai varum bodhum replay aagum
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
@@ -182,40 +181,89 @@ export function ValueHighlights() {
       },
     });
 
-    // 4 boxes-um ONE TIME la (stagger illa) animate aagum
-    // 1. Cards slide in from left & right
+    // 0. Top gold bar draws across the whole section
+    if (bar) {
+      tl.fromTo(
+        bar,
+        { scaleX: 0 },
+        { scaleX: 1, duration: 1.3, ease: "expo.inOut" },
+        0
+      );
+    }
+
+    // 1. Cards: slide from sides + blur-to-sharp + slight skew settle (all 4 together)
     tl.fromTo(
       cards,
-      { opacity: 0, x: (i: number) => dir(i) * 160 },
-      { opacity: 1, x: 0, duration: 1, ease: "power3.out" },
-      0
+      {
+        opacity: 0,
+        x: (i: number) => dir(i) * 180,
+        skewX: (i: number) => dir(i) * -8,
+        filter: "blur(10px)",
+      },
+      {
+        opacity: 1,
+        x: 0,
+        skewX: 0,
+        filter: "blur(0px)",
+        duration: 1.1,
+        ease: "expo.out",
+      },
+      0.1
     );
 
-    // 2. Icon circles pop in
+    // 2. Light shine sweeps across each card once after landing
+    tl.fromTo(
+      shines,
+      { xPercent: -150, opacity: 0 },
+      { xPercent: 450, opacity: 1, duration: 1.1, ease: "power2.inOut" },
+      0.7
+    );
+
+    // 3. Icon circle pops in
     tl.fromTo(
       icons,
-      { scale: 0.4, opacity: 0, rotate: (i: number) => dir(i) * -25 },
-      { scale: 1, opacity: 1, rotate: 0, duration: 0.8, ease: "back.out(1.8)" },
-      0.35
+      { scale: 0.3, opacity: 0, rotate: (i: number) => dir(i) * -40 },
+      { scale: 1, opacity: 1, rotate: 0, duration: 0.9, ease: "back.out(2)" },
+      0.45
     );
 
-    // 3. Titles slide from the same side
+    // 4. Gold ring draws around the icon
+    tl.fromTo(
+      rings,
+      { strokeDashoffset: 1, opacity: 1 },
+      { strokeDashoffset: 0, duration: 1, ease: "power2.inOut" },
+      0.6
+    );
+    tl.to(rings, { opacity: 0.45, duration: 0.6, ease: "power1.out" }, 1.6);
+
+    // 5. Title: mask reveal from the same side as the card
     tl.fromTo(
       titles,
-      { opacity: 0, x: (i: number) => dir(i) * 40 },
-      { opacity: 1, x: 0, duration: 0.7, ease: "power3.out" },
-      0.5
-    );
-
-    // 4. Subtitles fade up
-    tl.fromTo(
-      subtitles,
-      { opacity: 0, y: 12 },
-      { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+      {
+        opacity: 0,
+        x: (i: number) => dir(i) * 36,
+        clipPath: (i: number) =>
+          dir(i) < 0 ? "inset(-5% 100% -5% -5%)" : "inset(-5% -5% -5% 100%)",
+      },
+      {
+        opacity: 1,
+        x: 0,
+        clipPath: "inset(-5% -5% -5% -5%)",
+        duration: 0.9,
+        ease: "power3.out",
+      },
       0.65
     );
 
-    // 5. Gentle floating icons (idle, very subtle)
+    // 6. Subtitle: fade up + letter-spacing settles
+    tl.fromTo(
+      subtitles,
+      { opacity: 0, y: 14, letterSpacing: "0.2em" },
+      { opacity: 1, y: 0, letterSpacing: "0.025em", duration: 0.9, ease: "power3.out" },
+      0.85
+    );
+
+    // 7. Gentle floating icons (idle)
     gsap.to(glyphs, {
       y: -3,
       duration: 2.2,
@@ -223,19 +271,17 @@ export function ValueHighlights() {
       repeat: -1,
       yoyo: true,
       stagger: { each: 0.35, from: "start" },
-      delay: 1.2,
+      delay: 1.4,
     });
   }, []);
+
+  const iconClass =
+    "h-7 w-7 text-[#072338] transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 group-hover:text-[#c59139]";
 
   const highlights = [
     {
       icon: (
-        <svg
-          className="h-7 w-7 text-[#072338] transition-all duration-300 group-hover:scale-110 group-hover:text-[#c59139]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
+        <svg className={iconClass} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -249,12 +295,7 @@ export function ValueHighlights() {
     },
     {
       icon: (
-        <svg
-          className="h-7 w-7 text-[#072338] transition-all duration-300 group-hover:scale-110 group-hover:text-[#c59139]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
+        <svg className={iconClass} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -268,12 +309,7 @@ export function ValueHighlights() {
     },
     {
       icon: (
-        <svg
-          className="h-7 w-7 text-[#072338] transition-all duration-300 group-hover:scale-110 group-hover:text-[#c59139]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
+        <svg className={iconClass} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -287,12 +323,7 @@ export function ValueHighlights() {
     },
     {
       icon: (
-        <svg
-          className="h-7 w-7 text-[#072338] transition-all duration-300 group-hover:scale-110 group-hover:text-[#c59139]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
+        <svg className={iconClass} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -311,15 +342,47 @@ export function ValueHighlights() {
       ref={containerRef}
       className="relative z-20 overflow-hidden border-y border-gray-200/80 bg-[#f8faf9]"
     >
+      {/* Gold bar that draws across on entry */}
+      <div
+        aria-hidden="true"
+        className="feature-strip-bar absolute inset-x-0 top-0 z-30 h-[3px] origin-left bg-gradient-to-r from-[#9a1827] via-[#c59139] to-[#9a1827]"
+      />
+
       <div className="mx-auto max-w-[1400px]">
         <div className="relative isolate grid grid-cols-1 divide-y divide-gray-200/70 sm:grid-cols-2 sm:divide-y-0 sm:divide-x lg:grid-cols-4">
           {highlights.map((item) => (
             <div
               key={item.title}
-              className="feature-strip-card group relative flex h-full flex-col items-center justify-center overflow-hidden px-6 py-9 text-center transition-all duration-300 before:absolute before:left-0 before:top-0 before:h-[3px] before:w-full before:origin-left before:scale-x-0 before:bg-[#c59139] before:transition-transform before:duration-500 hover:bg-white hover:shadow-md group-hover:before:scale-x-100 hover:before:scale-x-100"
+              className="feature-strip-card group relative flex h-full flex-col items-center justify-center overflow-hidden px-6 py-9 text-center transition-colors duration-300 before:absolute before:left-0 before:top-0 before:h-[3px] before:w-full before:origin-left before:scale-x-0 before:bg-[#c59139] before:transition-transform before:duration-500 hover:bg-white hover:shadow-md hover:before:scale-x-100"
             >
-              {/* Icon circle with hover ring pulse */}
+              {/* Shine sweep */}
+              <span
+                aria-hidden="true"
+                className="feature-strip-shine pointer-events-none absolute inset-y-0 left-0 w-1/4 -skew-x-12 bg-gradient-to-r from-transparent via-white/80 to-transparent opacity-0"
+              />
+
+              {/* Icon circle with drawn ring + hover pulse */}
               <div className="feature-strip-icon relative mb-3.5 flex h-14 w-14 items-center justify-center rounded-full border border-gray-200 bg-white shadow-2xs transition-all duration-300 group-hover:border-[#c59139]/50 group-hover:shadow-md">
+                <svg
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -inset-[3px] h-[calc(100%+6px)] w-[calc(100%+6px)] -rotate-90"
+                  viewBox="0 0 60 60"
+                >
+                  <circle
+                    className="feature-strip-ring"
+                    cx="30"
+                    cy="30"
+                    r="29"
+                    fill="none"
+                    stroke="#c59139"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    pathLength={1}
+                    strokeDasharray={1}
+                    strokeDashoffset={0}
+                    opacity={0.45}
+                  />
+                </svg>
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-0 rounded-full border border-[#c59139]/60 opacity-0 group-hover:animate-ping group-hover:opacity-100 motion-reduce:group-hover:animate-none"
