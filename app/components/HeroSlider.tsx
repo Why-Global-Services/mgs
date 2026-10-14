@@ -162,17 +162,17 @@ export function HeroSlider() {
           </p>
 
           {/* 4. CTAs with Editorial Micro-Interactions */}
-          <div className="hero-buttons mt-6 sm:mt-8 flex flex-col xs:flex-row items-stretch xs:items-center gap-3 sm:gap-5">
+          <div className="hero-buttons mt-6 sm:mt-8 flex flex-col xs:flex-row items-start gap-3 sm:gap-5">
             <a
               href="#admissions"
-              className="hero-btn-apply btn-editorial group inline-flex items-center justify-center gap-2.5 rounded-full bg-[#9a1827] px-6 sm:px-8 py-3 sm:py-3.5 text-[11px] sm:text-[13px] font-bold uppercase tracking-wider text-white shadow-md hover:bg-[#801320]"
+              className="hero-btn-apply btn-editorial group inline-flex w-fit items-center justify-center gap-2.5 rounded-full border border-[#730404] bg-[#730404] px-6 sm:px-8 py-3 sm:py-3.5 text-[11px] sm:text-[13px] font-bold uppercase tracking-wider text-white shadow-md hover:bg-[#051d2d]"
             >
               <span>Apply Now</span>
               <span className="btn-arrow font-sans">→</span>
             </a>
             <a
               href="#discover"
-              className="hero-btn-explore btn-editorial group inline-flex items-center justify-center gap-2.5 rounded-full border-2 border-[#072338] bg-white px-5 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-[13px] font-bold uppercase tracking-wider text-[#072338] shadow-xs hover:bg-[#072338] hover:text-white"
+              className="hero-btn-explore btn-editorial group inline-flex w-fit items-center justify-center gap-2.5 rounded-full border-2 border-[#072338] bg-white px-5 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-[13px] font-bold uppercase tracking-wider text-[#072338] shadow-xs hover:bg-[#072338] hover:text-white"
             >
               <span>Explore Our School</span>
               <span className="btn-arrow font-sans">→</span>
