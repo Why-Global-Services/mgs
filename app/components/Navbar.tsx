@@ -228,8 +228,12 @@ import { usePathname } from "next/navigation";
 import { useGSAPScope } from "../lib/motion";
 import { homepageImages } from "../lib/images";
 
-/* ---------- LOGO (unchanged) ---------- */
-function Brand() {
+/* ---------- LOGO ---------- */
+// scrolled = false -> maroon background -> white text
+// scrolled = true  -> cream background  -> maroon text
+function Brand({ scrolled }: { scrolled: boolean }) {
+  const textColor = scrolled ? "text-[#9a1827]" : "text-white";
+
   return (
     <a
       aria-label="Maharishi Global School home"
@@ -242,10 +246,14 @@ function Brand() {
         src={homepageImages.logo.src}
       />
       <div className="flex flex-col justify-center">
-        <span className="font-serif text-[15px] font-extrabold uppercase leading-none tracking-wider text-[#072338] sm:text-[18px]">
+        <span
+          className={`font-serif text-[15px] font-extrabold uppercase leading-none tracking-wider transition-colors duration-300 sm:text-[18px] ${textColor}`}
+        >
           Maharishi
         </span>
-        <span className="text-[12px] font-bold uppercase tracking-[0.18em] text-[#072338] sm:text-[13px]">
+        <span
+          className={`text-[12px] font-bold uppercase tracking-[0.18em] transition-colors duration-300 sm:text-[13px] ${textColor}`}
+        >
           Global School
         </span>
         <div className="mt-1">
@@ -354,7 +362,7 @@ const navLinks: NavItem[] = [
     label: "University career counselling",
     href: "/university-career-counselling",
     match: "/university-career-counselling",
-      children: [
+    children: [
       { label: "Counselling Overview", href: "/university-career-counselling/overview" },
       { label: "Meet the Counsellors", href: "/university-career-counselling/counsellors" },
       { label: "University Admissions Support", href: "/university-career-counselling/admissions-support" },
@@ -426,18 +434,30 @@ export function Navbar() {
   const isItemActive = (match: string) =>
     match === "/" ? pathname === "/" : pathname.startsWith(match);
 
+  /* ---------- Colours that follow the navbar background ---------- */
+  // #730404 bg (top)  -> white text, light-gold hover/active
+  // Cream bg (scroll) -> maroon text, gold hover/active
+  const linkIdle = scrolled ? "text-[#9a1827]" : "text-white";
+  const linkHover = scrolled
+    ? "group-hover:text-[#c59139]"
+    : "group-hover:text-[#f3d9a4]";
+  const linkActive = scrolled ? "text-[#c59139]" : "text-[#f3d9a4]";
+  const dividerColor = scrolled ? "border-[#9a1827]/20" : "border-white/25";
+  const barColor = scrolled ? "bg-[#9a1827]" : "bg-white";
+  const burgerHover = scrolled ? "hover:bg-[#9a1827]/10" : "hover:bg-white/10";
+
   return (
     <>
       <header
         ref={headerRef}
         className={`sticky top-0 z-50 w-full transition-all duration-300 ${
           scrolled
-            ? "bg-[#f7f0e7]/95 shadow-[0_4px_24px_rgba(7,35,56,0.08)] backdrop-blur-md"
-            : "border-b border-[#e9dfd1] bg-[#f7f0e7]"
+            ? "bg-[#730404]/95 shadow-[0_4px_24px_rgba(7,35,56,0.08)] backdrop-blur-md"
+            : "border-b border-[#730404] bg-[#730404]"
         }`}
       >
         <div className="mx-auto flex h-[82px] max-w-[1600px] items-center justify-between gap-4 px-5 sm:h-[120px] sm:px-8 xl:px-8">
-          <Brand />
+          <Brand scrolled={scrolled} />
 
           {/* ---------- Desktop nav ---------- */}
           <nav
@@ -452,15 +472,13 @@ export function Navbar() {
                 <div
                   key={item.label}
                   className={`nav-link-item group relative my-3 flex items-center ${
-                    i !== 0 ? "border-l border-gray-200" : ""
+                    i !== 0 ? `border-l transition-colors duration-300 ${dividerColor}` : ""
                   }`}
                 >
                   <a
                     href={item.href}
                     className={`flex h-full max-w-[150px] items-center px-3.5 text-[12.5px] font-bold uppercase leading-tight tracking-wide transition-colors duration-200 2xl:max-w-[190px] 2xl:px-5 2xl:text-[13.5px] ${
-                      active
-                        ? "text-[#9a1827]"
-                        : "text-[#072338] group-hover:text-[#9a1827]"
+                      active ? linkActive : `${linkIdle} ${linkHover}`
                     }`}
                   >
                     <span>{item.label}</span>
@@ -476,7 +494,7 @@ export function Navbar() {
                     )}
                   </a>
 
-                  {/* Dropdown */}
+                  {/* Dropdown (white panel, dark text) */}
                   {item.children && (
                     <div
                       className={`invisible absolute top-full z-50 w-[290px] translate-y-2 pt-3 opacity-0 transition-all duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 ${
@@ -488,7 +506,7 @@ export function Navbar() {
                           <li key={child.label} className="group/sub relative">
                             <a
                               href={child.href}
-                              className="flex items-center justify-between px-7 py-2 text-[14px] font-semibold text-[#072338]/80 transition-colors hover:bg-[#c59139]/10 hover:text-[#c59139]"
+                              className="flex items-center justify-between px-7 py-2 text-[14px] font-semibold text-[#072338]/80 transition-colors hover:bg-[#9a1827]/5 hover:text-[#9a1827]"
                             >
                               <span>{child.label}</span>
                               {child.children && (
@@ -504,7 +522,7 @@ export function Navbar() {
                                     <li key={sub.label}>
                                       <a
                                         href={sub.href}
-                                        className="block px-6 py-2 text-[13.5px] font-semibold text-[#072338]/80 transition-colors hover:bg-[#c59139]/10 hover:text-[#c59139]"
+                                        className="block px-6 py-2 text-[13.5px] font-semibold text-[#072338]/80 transition-colors hover:bg-[#9a1827]/5 hover:text-[#9a1827]"
                                       >
                                         {sub.label}
                                       </a>
@@ -528,24 +546,24 @@ export function Navbar() {
             <button
               aria-expanded={open}
               aria-label={open ? "Close menu" : "Open menu"}
-              className="flex h-11 w-11 items-center justify-center rounded-lg text-[#072338] transition hover:bg-gray-100"
+              className={`flex h-11 w-11 items-center justify-center rounded-lg transition ${burgerHover}`}
               onClick={() => setOpen((val) => !val)}
               type="button"
             >
               <span className="sr-only">Toggle navigation</span>
               <div className="flex flex-col gap-1.5">
                 <span
-                  className={`block h-0.5 w-6 bg-[#072338] transition-transform duration-300 ${
+                  className={`block h-0.5 w-6 transition-all duration-300 ${barColor} ${
                     open ? "translate-y-2 rotate-45" : ""
                   }`}
                 />
                 <span
-                  className={`block h-0.5 w-6 bg-[#072338] transition-opacity duration-300 ${
+                  className={`block h-0.5 w-6 transition-all duration-300 ${barColor} ${
                     open ? "opacity-0" : ""
                   }`}
                 />
                 <span
-                  className={`block h-0.5 w-6 bg-[#072338] transition-transform duration-300 ${
+                  className={`block h-0.5 w-6 transition-all duration-300 ${barColor} ${
                     open ? "-translate-y-2 -rotate-45" : ""
                   }`}
                 />
@@ -555,10 +573,10 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* ---------- Mobile drawer ---------- */}
+      {/* ---------- Mobile drawer (white bg, dark text) ---------- */}
       <div
         aria-hidden={!open}
-        className={`fixed inset-0 z-40 bg-white/98 backdrop-blur-xl transition-all duration-300 xl:hidden ${
+        className={`fixed inset-0 z-40 bg-white backdrop-blur-xl transition-all duration-300 xl:hidden ${
           open
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-4 opacity-0"
@@ -566,7 +584,7 @@ export function Navbar() {
       >
         <div className="flex h-full flex-col overflow-y-auto px-6 pb-8 pt-24">
           <div className="mb-4 border-b border-gray-100 pb-4">
-            <p className="text-[12px] font-extrabold uppercase tracking-widest text-[#c59139]">
+            <p className="text-[12px] font-extrabold uppercase tracking-widest text-[#9a1827]">
               Menu
             </p>
           </div>
@@ -614,7 +632,7 @@ export function Navbar() {
                                     onClick={() =>
                                       setSubExpanded(subOpen ? null : child.label)
                                     }
-                                    className="flex w-full items-center justify-between py-2 text-left text-[14.5px] font-semibold text-[#072338]/80 hover:text-[#c59139]"
+                                    className="flex w-full items-center justify-between py-2 text-left text-[14.5px] font-semibold text-[#072338]/80 hover:text-[#9a1827]"
                                   >
                                     <span>{child.label}</span>
                                     <span
@@ -637,7 +655,7 @@ export function Navbar() {
                                         <a
                                           href={sub.href}
                                           onClick={close}
-                                          className="block py-2 text-[13.5px] font-semibold text-[#072338]/75 hover:text-[#c59139]"
+                                          className="block py-2 text-[13.5px] font-semibold text-[#072338]/75 hover:text-[#9a1827]"
                                         >
                                           {sub.label}
                                         </a>
@@ -649,7 +667,7 @@ export function Navbar() {
                                 <a
                                   href={child.href}
                                   onClick={close}
-                                  className="block py-2 text-[14.5px] font-semibold text-[#072338]/80 hover:text-[#c59139]"
+                                  className="block py-2 text-[14.5px] font-semibold text-[#072338]/80 hover:text-[#9a1827]"
                                 >
                                   {child.label}
                                 </a>
@@ -688,5 +706,3 @@ export function Navbar() {
     </>
   );
 }
-
-
